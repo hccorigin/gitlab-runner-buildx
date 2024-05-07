@@ -1,4 +1,5 @@
 # Build GitLab Runner Image supported multi CPU architecuture
+
 GitLab-Runner 에서 Multi-Architecture Image 빌드 기능을 제공하기 위한 환경구성을 합니다.
 > Multi-Architecture 란, Host CPU Architecture 에 무관하게 Arm64, Amd64, x86_64 같은 다양한 CPU Architecture 에 맞는 Docker image 를 빌드하게 해주는 기능입니다.
 
@@ -84,6 +85,9 @@ __여기서는 host에 직접 설치해서 제공합니다.__
     ```
 
 ## 3. GitLab-Runner Wrapper 이미지 빌드
+2024-04-28 기준 Dockerfile 빌드시 설치되는 binary GitLab-Runner 버전은 __v16.10.0__ 입니다.
+향후 빌드 시점에 따라 다운로드 되는 버전은 달라질 수 있습니다.
+
 이미지를 빌드하기 위해 Makefile 을 사용합니다.
 
 > x86_64(amd64) 머신에서 make all 로 arm64/amd64 를 동시에 빌드해서 Docker Hub 에 정상 업로드 한후,
