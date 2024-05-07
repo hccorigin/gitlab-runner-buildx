@@ -173,6 +173,11 @@ $ docker exec -it gitlab-runner bash
 $ bash create_executor.sh
 ```
 
+## 6. Docker image on Docker Hub
+빌드된 이미지 파일들:
+
+* https://hub.docker.com/r/hccorigin/gitlab-runner
+
 # 부록 
 ## Docker image 로 QEMU 제공방법
 위 2번 QEMU를 Host에 직접 설치하는 방법대신 Docker image `multiarch/qemu-user-static and docker/binfmt` 로 대신 할 수 있습니다.
