@@ -14,7 +14,7 @@ ARG DOCKER_VERSION=25.0.2
 #[] Install python user's packages
 # copy or cache mount 방식중 이미지 크기를 줄이는 방식을 택하자.
 FROM --platform=$BUILDPLATFORM python:${PYTHON_VERSION} as python-pkg
-COPY pypi/requirements.txt .
+COPY py/requirements.txt .
 # pip에게 케시 위치를 알려주는 환경 변수
 ENV PIP_CACHE_DIR=/root/.cache/pip
 RUN mkdir -p $PIP_CACHE_DIR 
