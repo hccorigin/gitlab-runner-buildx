@@ -1,0 +1,33 @@
+
+version: "3"
+
+services:
+  gitlab-runner:
+    container_name: gitlab-runner
+    image: hccorigin/gitlab-runner:15.5.9
+#    platform: linux/amd64
+    privileged: true
+    restart: always
+    hostname: runner
+    environment:
+      - TZ=Asia/Seoul
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+      - /usr/local/bin/docker-compose:/usr/local/bin/docker-compose
+      - /usr/libexec/docker/cli-plugins:/usr/libexec/docker/cli-plugins
+      - /etc/localtime:/etc/localtime
+#      - $PWD/.gitlab-runner:/etc/gitlab-runner
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+
+#networks:
+#  default:
+#    driver: bridge
+#    ipam:
+#      driver: default
+#      config:
+#        - subnet: xxx.xxx.xxx.xxx/xx
+#          gateway: xxx.xxx.xxx.1
