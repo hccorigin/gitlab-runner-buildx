@@ -1,0 +1,8 @@
+requests
+pytest
+pyyaml
+xmltodict
+dicttoxml
+cvsslib
+dnspython
+packaging
