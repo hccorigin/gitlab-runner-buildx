@@ -118,7 +118,7 @@ $ make release-update
 실행 머신에 따라서 `platform: linux/arm64` 만 변경한후 사용하면 됩니다.
 
 ```bash
-$ docker-compose up -d || docker compose up -d
+$ docker-compose down || docker compose up -d
 ```
 
 ### user permission 문제 해결
