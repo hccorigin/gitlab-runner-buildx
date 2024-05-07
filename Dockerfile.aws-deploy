@@ -1,0 +1,32 @@
+FROM debian:bullseye-slim
+
+WORKDIR /root
+
+RUN apt update \
+    && apt upgrade -y \
+    && apt install -y curl git gcc unzip jq apt-transport-https \
+            ca-certificates gnupg2 software-properties-common \
+    && addgroup docker_grp --gid 990 \
+    && useradd docker -d /prod/gitlab-runner -g docker_grp -M -u 1002 -s /bin/bash \
+    && useradd gitlab-runner -g docker_grp -m -s /bin/bash \
+    && curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip" \
+    && unzip awscliv2.zip \
+    && ./aws/install \
+    && curl "https://releases.hashicorp.com/terraform/1.0.6/terraform_1.0.6_linux_arm64.zip" -o "terraform.zip" \
+    && unzip terraform.zip \
+    && mv terraform /usr/local/bin \
+    && curl "https://get.helm.sh/helm-v3.14.3-linux-arm64.tar.gz" -o "helm.tar.gz" \
+    && tar -zxvf helm.tar.gz \
+    && mv linux-arm64/helm /usr/local/bin \
+    && curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.27.9/2024-01-04/bin/linux/arm64/kubectl \
+    && chmod +x kubectl \
+    && mv kubectl /usr/local/bin \
+    && rm -rf /root/* \
+    && curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - \
+    && add-apt-repository "deb [arch=arm64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" \
+    && apt update -y \
+    && apt install -y docker-ce-cli \
+    && rm -rf /var/lib/apt/lists/*
+
+USER gitlab-runner
+WORKDIR /home/gitlab-runner
