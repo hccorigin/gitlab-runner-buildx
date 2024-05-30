@@ -172,6 +172,17 @@ $ docker exec -it gitlab-runner bash
 # executor 생성
 $ bash create_executor.sh
 ```
+### Docker executor 추가작업
+Docker executor 생성후 CI/CD 파이프라인에서 shell not found 오류 해결방법을 설명합니다.
+
+config.toml 파일을 다음과 같이 수정합니다:
+```bash
+...
+executor = docker
+shell = "bash" <-- 라인추가
+...
+    priviliged = true  <-- true 로 변경
+```
 
 ## 6. Docker image on Docker Hub
 빌드된 이미지 파일들:
