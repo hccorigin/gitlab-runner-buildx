@@ -11,12 +11,14 @@ function reg_docker_executor {
     local HELPER_IMAGE=$6
 
     gitlab-runner register \
+        --shell bash \
         --executor docker \
         --non-interactive \
         --registration-token $GITLAB_TOKEN \
         --url $GITLAB_URL \
         --name $EXECUTOR_NAME \
         --docker-image $DEFAULT_IMAGE \
+        --docker-privileged true \
         --docker-volumes "/cache" \
         --docker-volumes "/var/run/docker.sock:/var/run/docker.sock" \
         --tag-list $TAG_LIST \
