@@ -1,3 +1,10 @@
+# 추가작업
+다음 내용은 러너 빌드시 추가되어야 하는 내용을 정리했습니다.
+* 현 러너를 Docker executor의 default image로 사용시 발생되는 이슈들
+    - pip command 실행 가능하게 추가
+    - docker command 실행 가능하게 추가
+    - shell script 실행 가능하게 추가
+
 # Build GitLab Runner Image supported multi CPU architecuture
 
 GitLab-Runner 에서 Multi-Architecture Image 빌드 기능을 제공하기 위한 환경구성을 합니다.
@@ -8,6 +15,7 @@ GitLab-Runner 가 실행중인 Host의 CPU architecure 와 다른 CPU architecur
 Non-native architecure 란 host와 다른 아키텍쳐를 의미 합니다.
 
 예를들면, GitLab-Runner 가 x86_64 에서 실행중인데, Arm64 or Arm 기반의 Docker image 를 빌드할 수 있는 환경을 지원한다는 의미 입니다.
+
 
 ### QEMU 제공에 대한 참고사항
 QEMU emulator 는 host 에 직접 설치해서 제공할 수도 있고, 또는 Docker image 로 제공할 수도 있습니다.
