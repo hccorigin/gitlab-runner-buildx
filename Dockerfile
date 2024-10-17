@@ -1,14 +1,14 @@
 
 # syntax=docker/dockerfile:1.2
-# <- BuildKit new features 사용을 위해서 반드시 적어줘야함.
+# <- BuildKit new features 사용을 위해서 반드시 적어줘야함. 맨위 한줄 공란 필수
 
 ARG DEBIAN_VERSION=12
 ARG DEBIAN_VERSION_CODENAME=bookworm
-ARG GITLAB_RUNNER_VERSION=16.10.0
+ARG GITLAB_RUNNER_VERSION=17.4.1
 ARG PYTHON_VERSION=3.12
 ARG PYTHON_PIP_VERSION=24.0
 ARG PYTHON_SETUPTOOLS_VERSION=58.1.0
-ARG DOCKER_VERSION=25.0.2
+ARG DOCKER_VERSION=27.3.1
 
 #[===========================================================================] 
 #[] Install python user's packages
@@ -28,6 +28,7 @@ EOT
 FROM --platform=$BUILDPLATFORM python:${PYTHON_VERSION} as gitlab-runner
 ARG TARGETOS
 ARG TARGETARCH
+ARG GITLAB_RUNNER_VERSION
 WORKDIR /var/install_pkgs
 RUN \
     --mount=type=bind,source=scripts/install_pkgs.sh,target=./install_pkgs.sh <<EOT
@@ -47,6 +48,8 @@ RUN whereis trivy
 FROM --platform=$BUILDPLATFORM python:${PYTHON_VERSION} as base
 ARG TARGETPLATFORM
 ARG TARGETARCH
+ARG DOCKER_VERSION
+#ENV DOCKER_VERSION=$DOCKER_VERSION
 # os and python packages installed:
 COPY --from=python-pkg /usr/local/bin /usr/local/bin
 COPY --from=python-pkg /usr/local/lib /usr/local/lib
@@ -57,6 +60,7 @@ COPY --from=gitlab-runner /var/install_pkgs/helm /usr/bin/helm
 COPY --from=gitlab-runner /var/install_pkgs/helm2 /usr/bin/helm2
 COPY --from=gitlab-runner /var/install_pkgs/tiller2 /usr/bin/tiller2
 COPY --from=gitlab-runner /usr/bin/dumb-init /usr/bin/dumb-init
+COPY scripts/install_docker.sh /
 
 
 RUN chmod +x /usr/bin/dumb-init \
@@ -95,8 +99,9 @@ RUN \
         qemu-user-static binfmt-support
     apt-get clean
     rm -rf /var/lib/apt/lists/*
+    bash /install_docker.sh
+    apt-get update -y
 EOT
-
 
 
 #[===========================================================================] 
@@ -107,11 +112,10 @@ ARG TARGETARCH
 COPY --chmod=777 scripts/entrypoint /
 WORKDIR /home/gitlab-runner
 COPY --chmod=775 scripts/create_builder.sh .
-COPY --chmod=775 scripts/create_executor.sh .
+COPY --chmod=775 scripts/register_runner.sh .
 COPY --chmod=775 tools ./tools
 VOLUME [/etc/gitlab-runner, /home/gitlab-runner]
 STOPSIGNAL SIGQUIT
 RUN groupadd gitlab-runner \
     && useradd -g gitlab-runner gitlab-runner
 ENTRYPOINT ["/usr/bin/dumb-init", "/entrypoint"]
-CMD ["run", "--user=gitlab-runner", "--working-directory=/home/gitlab-runner"]
