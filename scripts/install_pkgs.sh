@@ -6,11 +6,10 @@ set -e
 echo "Working directory=$PWD"
 echo "TARTGET OS=$TARGETOS"
 echo "TARTGET ARCH=$TARGETARCH"
+echo "GITLAB_RUNNER_VERSION=$GITLAB_RUNNER_VERSION"
 
-# dumb-init
+# dumb-init: GitLab-Runner Container 실행시키는 도구 설치
 echo ">> dumb-init downloading..."
-
-
 DUMB_INT_VERSION="1.2.5"
 DUMB_TARGET=$(uname -m)
 # new binary
@@ -30,11 +29,11 @@ curl -L "${URL_DUMB_INIT}/${DUMB_INT_ARCH_FILE}" -o /usr/bin/dumb-init
 #dpkg -i ${DUMB_INT_ARCH_FILE}
 echo "Installed dumb-init>>>$(whereis dumb-init)"
 
-# GitLab Runner
+# GitLab Runner(v16.11.4)
 # https://docs.gitlab.com/runner/install/linux-manually.html#using-binary-file
 echo ">> GitLab-Runner downloading..."
-URL_AWS_S3="https://gitlab-runner-downloads.s3.amazonaws.com"
-curl -L "${URL_AWS_S3}/latest/binaries/gitlab-runner-linux-${TARGETARCH}" -o gitlab-runner
+URL_AWS_S3="https://s3.dualstack.us-east-1.amazonaws.com"
+curl -L "${URL_AWS_S3}/gitlab-runner-downloads/v${GITLAB_RUNNER_VERSION}/binaries/gitlab-runner-linux-${TARGETARCH}" -o gitlab-runner
 
 # kubectl
  echo ">> KubeCtl downloading..."
@@ -51,7 +50,7 @@ TRIVY_ARCH=$(case ${TARGETARCH:-amd64} in \
 "arm64")   echo "ARM64" ;; \
 "ppc64le") echo "PPC64LE" ;; \
 "s390x")   echo "s390x"   ;; \
-*)               echo ""        ;; esac)
+*)         echo "" ;; esac)
 TRIVY_VERSION=$(curl -L -s https://api.github.com/repos/aquasecurity/trivy/releases/latest| sed -En 's/"tag_name": "v(.+)",/\1/p'|sed 's/^ *//g')
 TRIVY_ARCH_FILE="trivy_${TRIVY_VERSION}_Linux-${TRIVY_ARCH}.deb"
 URL_TRIVY="https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}"
