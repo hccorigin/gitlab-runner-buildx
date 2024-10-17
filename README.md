@@ -114,13 +114,18 @@ current commit information was not captured by the build: failed to read current
 ```
 #### 이미지 빌드 방법
 ```bash
-# arm64기반 이미지 빌드
+# docker Hub login
+$ docker login
+> username: hccorigin
+> password: *****
+
+# arm64 기반 이미지 빌드시
 $ make release-arm64
 
-# amd64
+# amd64 기반 이미지 빌드시
 $ make release-amd64
 
-# update manifest on Docker Hub
+# update manifest on Docker Hub(update manifest)
 $ make release-update
 ```
 
