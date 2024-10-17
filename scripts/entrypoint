@@ -1,8 +1,17 @@
 #!/bin/bash
 
+# change default shell as bash
+chsh -s /usr/bin/bash
+
+# register compose alias to .bashrc
+# alias docker-compose='docker compose'
+
 # set alias fot the docker compose command
 echo "alias docker-compose='docker compose'" >> $HOME/.bashrc
 
+
+# Start docker-engine
+service docker start
 
 # gitlab-runner data directory
 DATA_DIR="/etc/gitlab-runner"
